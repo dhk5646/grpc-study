@@ -1,0 +1,6 @@
+rootProject.name = 'grpc-study'
+
+include 'grpc-contract'
+include 'grpc-server-app'
+include 'grpc-client-app'
+

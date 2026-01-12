@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.study.grpc.proto";
+option java_outer_classname = "UserProto";
+
+package user;
+
+// 사용자 서비스 정의
+service UserService {
+  // 사용자 생성
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+
+  // 사용자 조회
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+
+  // 사용자 목록 조회 (서버 스트리밍)
+  rpc GetUsers (GetUsersRequest) returns (stream GetUsersResponse);
+
+  // 사용자 일괄 생성 (클라이언트 스트리밍)
+  rpc BatchCreateUsers (stream CreateUserRequest) returns (BatchCreateUsersResponse);
+
+  // 사용자 실시간 동기화 (양방향 스트리밍)
+  rpc SyncUsers (stream SyncUsersRequest) returns (stream SyncUsersResponse);
+}
+
+// 사용자 생성 요청
+message CreateUserRequest {
+  string email = 1;
+  string name = 2;
+  string phone_number = 3;
+}
+
+// 사용자 생성 응답
+message CreateUserResponse {
+  int64 id = 1;
+  string email = 2;
+  string name = 3;
+  string phone_number = 4;
+  string status = 5;
+  int64 created_at = 6;
+  int64 updated_at = 7;
+}
+
+// 사용자 조회 요청
+message GetUserRequest {
+  int64 id = 1;
+}
+
+// 사용자 조회 응답
+message GetUserResponse {
+  int64 id = 1;
+  string email = 2;
+  string name = 3;
+  string phone_number = 4;
+  string status = 5;
+  int64 created_at = 6;
+  int64 updated_at = 7;
+}
+
+// 사용자 목록 조회 요청
+message GetUsersRequest {
+  int32 page = 1;
+  int32 size = 2;
+}
+
+// 사용자 목록 조회 응답 (개별 사용자)
+message GetUsersResponse {
+  int64 id = 1;
+  string email = 2;
+  string name = 3;
+  string phone_number = 4;
+  string status = 5;
+  int64 created_at = 6;
+  int64 updated_at = 7;
+}
+
+
+// 일괄 생성 응답
+message BatchCreateUsersResponse {
+  int32 created_count = 1;
+  repeated int64 user_ids = 2;
+}
+
+// 동기화 요청
+message SyncUsersRequest {
+  string action = 1;  // CREATE, UPDATE, DELETE
+  int64 user_id = 2;
+  string email = 3;
+  string name = 4;
+  string phone_number = 5;
+}
+
+// 동기화 응답
+message SyncUsersResponse {
+  string status = 1;
+  string message = 2;
+  int64 timestamp = 3;
+}
+
